@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enter the Contest</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="papaparse.min.js"></script>
+    <link rel="stylesheet" type="text/css" href= "post.css" />
+    <style>
+        p {
+            font-size: 20px;
+            color: black;
+        }
+
+        div {
+            color: #e06519;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body bgcolor= "#ffffff";>
+	<h1>Upload your story</h1>
+
+
+    <p display="none">
+       Fill out the information below!<br>
+
+    </p>
+
+    <script>
+
+        function validate() {
+
+            var issues = [];
+
+            issues = checking(issues, 
+                document.getElementsByName("title")[0].value, "Title");
+
+            issues = checking(issues, 
+                document.getElementsByName("name")[0].value, "Name");
+
+            issues = checking(issues, 
+                document.getElementsByName("description")[0].value,
+                "Description");
+
+            issues = checking(issues, 
+                document.getElementsByName("media")[0].value, "Media");
+
+            if(issues.length > 0) {
+                form_alert(issues);
+                if(document.getElementsByName("name")[0].value == "Anonymous")
+                    document.getElementsByName("name")[0].value = "";
+                return false;
+            }
+
+            return true;
+        }
+
+        function checking(issues, value, name) {
+
+            var dquotes = contains_quotes(value);
+
+            if((value == "") || (dquotes)) {
+                if((!dquotes) && (name == "Name"))
+                    value = "Anonymous";
+                else if(!dquotes)
+                    issues.push("- Required field is empty: " + name + "\n");
+                    
+                else
+                    issues.push("- Required field should not include double" 
+                            +  " quotes: " + name + "\n");
+            }
+            return issues;
+        }
+
+        function contains_quotes(value)
+        {
+            for(var j = 0; j < value.length; j++) {
+                if(value[j] == '"')
+                    return true;
+            }
+
+            return false;
+        }
+
+        function form_alert(issues)
+		{
+			var output = "The following items were missing or incorrect:\n";
+			for(var i = 0; i < issues.length; i++) {
+				output += issues[i];
+			}
+			alert(output);	
+        }
+        
+    </script>
+
+    <form id="form" name="form" onSubmit="return validate();" method="get"
+        action="http://localhost:8080">
+        <div id="statement"> 
+            <div>*</div> indicates a required field
+        </div><br><br>
+
+        <label for="title">Title <div>*</div></label><br>
+        <input type="text" id="title" name="title" maxlength = "50" 
+            placeholder="Enter your submission title"><br><br>
+
+        <label for="name">Name</label><br> (Anonymous if left blank)<br>
+        <input type="text" id="name" name="name" maxlength = "20" 
+            placeholder="Enter your name"><br><br>
+
+        <label for="category">Main Category <div>*</div></label><br>
+        <select id="category" name="category">
+            <option value="arts">Arts</option>
+            <option value="cooking">Cooking</option>
+            <option value="exercise">Exercise</option>
+            <option value="games">Games</option>
+            <option value="health">Health</option>
+            <option value="nonprofit">Nonprofit/Humanity</option>
+            <option value="science">Science</option>
+            <option value="storytelling">Storytelling</option>
+            <option value="technology">Technology</option>
+        </select><br><br>
+
+        <label for="description">Description <div>*</div></label><br>
+        <textarea id="description" name="description" rows="5"
+        cols="50" placeholder="Enter a description of your submission"></textarea>
+        <br><br>
+
+        <label for="format_type">Format Type <div>*</div></label><br>
+        <select id="format_type" name="format_type">
+            <option value="article">Article</option>
+            <option value="photo">Photo</option>
+            <option value="video">Video</option>
+            <option value="website">Website</option>
+            <option value="other">Other</option>
+        </select><br><br>
+
+        <label for="media">Media Link <div>*</div></label><br>
+        <input type="file" id="media" name="media" ><br><br>
+
+        <input type="submit" value="Share Now">
+    </form>
+
+</body>
+</html>
